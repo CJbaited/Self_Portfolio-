@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: 250 70% 50%;
+    --secondary: 280 70% 50%;
+    --accent: 320 100% 65%;
+  }
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px hsl(var(--accent) / 0.5),
+                 0 0 20px hsl(var(--accent) / 0.3);
+  }
+  
+  .neon-border {
+    box-shadow: 0 0 10px hsl(var(--accent) / 0.5),
+                inset 0 0 5px hsl(var(--accent) / 0.3);
+  }
+  
+  .bg-grid {
+    background-image: linear-gradient(to right, hsl(var(--primary) / 0.1) 1px, transparent 1px),
+                      linear-gradient(to bottom, hsl(var(--primary) / 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+.hover-ship {
+  pointer-events: none;
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
