@@ -4,46 +4,84 @@ import { Github, Linkedin, Twitter, Code, Database, Server } from 'lucide-react'
 import Navigation from './components/Navigation';
 import ProjectCard from './components/ProjectCard';
 import HoverShip from './components/HoverShip';
+import DynamicGrid from './components/DynamicGrid';
 
 function App() {
   const [currentSection, setCurrentSection] = useState('home');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode);
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const projects = [
     {
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce solution with real-time inventory management',
+      title: 'Learning Platform',
+      description: 'Full-stack learning platform with real-time inventory/resource management',
       image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80',
-      tech: ['React', 'Node.js', 'PostgreSQL', 'Redis'],
+      tech: ['React', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind'],
       github: 'https://github.com',
-      live: 'https://example.com'
+      live: 'https://example.com',
     },
     {
-      title: 'AI Chat Application',
-      description: 'Real-time chat app with AI-powered responses',
+      title: 'Wipeout-Inspired VR-Game',
+      description: 'Virtual reality racing game with AI opponents. Built with Unity and C#',
       image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80',
-      tech: ['TypeScript', 'WebSocket', 'OpenAI', 'MongoDB'],
-      github: 'https://github.com'
-    }
+      tech: ['Unity', 'C#', 'Oculus', 'SteamVR', 'AI'],
+      github: 'https://github.com',
+    },
   ];
 
   const skills = [
     { icon: Code, label: 'Frontend', items: ['React', 'TypeScript', 'Tailwind'] },
-    { icon: Server, label: 'Backend', items: ['Node.js', 'Python', 'Go'] },
-    { icon: Database, label: 'Database', items: ['PostgreSQL', 'MongoDB', 'Redis'] }
+    { icon: Server, label: 'Backend', items: ['Node.js', 'C#', 'Go'] },
+    { icon: Database, label: 'Database', items: ['PostgreSQL', 'Supabase', 'MySQL'] },
   ];
 
   const sectionVariants = {
     enter: { opacity: 0, x: 100 },
     center: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -100 }
+    exit: { opacity: 0, x: -100 },
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--secondary))] text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid opacity-20" />
-      <HoverShip />
-      <Navigation currentSection={currentSection} onNavigate={setCurrentSection} />
+  const transition = { duration: 0.3 };
 
+  return (
+    <div className={`min-h-screen text-white relative overflow-hidden`}>
+      {/* Gradient Layers */}
+      <div className="gradient-container">
+        <div
+          className={`gradient-light ${
+            isDarkMode ? 'opacity-0' : 'opacity-100'
+          }`}
+        />
+        <div
+          className={`gradient-dark ${
+            isDarkMode ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      </div>
+
+      {/* Overlay Grid */}
+      <div className="absolute inset-0 bg-grid opacity-20" />
+
+      {/* HoverShip Component */}
+      <HoverShip />
+      <DynamicGrid />
+
+      {/* Navigation Component */}
+      <Navigation
+        currentSection={currentSection}
+        onNavigate={setCurrentSection}
+        isDarkMode={isDarkMode}
+        toggleDarkMode={toggleDarkMode}
+      />
+
+      {/* Main Content */}
       <AnimatePresence mode="wait">
         {currentSection === 'home' && (
           <motion.section
@@ -53,6 +91,7 @@ function App() {
             initial="enter"
             animate="center"
             exit="exit"
+            transition={transition}
           >
             <div className="text-center">
               <motion.h1
@@ -61,7 +100,7 @@ function App() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                John Doe
+                Cedric Janssens
               </motion.h1>
               <motion.p
                 className="text-2xl text-white/80 mb-8"
@@ -83,13 +122,14 @@ function App() {
             initial="enter"
             animate="center"
             exit="exit"
+            transition={transition}
           >
             <div className="max-w-4xl">
               <h2 className="text-4xl font-bold mb-8 text-glow">About Me</h2>
               <p className="text-lg text-white/80 mb-8">
                 Passionate about creating seamless digital experiences and drawing inspiration
-                from the futuristic aesthetics of games like Wipeout. I specialize in
-                building modern web applications with a focus on performance and user experience.
+                from the futuristic aesthetics of games like Wipeout. I specialize in building
+                modern web applications with a focus on performance and user experience.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {skills.map(({ icon: Icon, label, items }) => (
@@ -98,7 +138,9 @@ function App() {
                     <h3 className="text-xl font-bold mb-4">{label}</h3>
                     <ul className="space-y-2">
                       {items.map((item) => (
-                        <li key={item} className="text-white/70">{item}</li>
+                        <li key={item} className="text-white/70">
+                          {item}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -116,6 +158,7 @@ function App() {
             initial="enter"
             animate="center"
             exit="exit"
+            transition={transition}
           >
             <div className="max-w-6xl">
               <h2 className="text-4xl font-bold mb-8 text-glow">Projects</h2>
@@ -136,6 +179,7 @@ function App() {
             initial="enter"
             animate="center"
             exit="exit"
+            transition={transition}
           >
             <div className="max-w-md w-full">
               <h2 className="text-4xl font-bold mb-8 text-glow">Contact</h2>

@@ -7,32 +7,149 @@
     --primary: 250 70% 50%;
     --secondary: 280 70% 50%;
     --accent: 320 100% 65%;
+    --gradient-start: 250 70% 50%;
+    --gradient-end: 320 100% 65%;
+    --glow-color: 320 100% 65%;
+
+    /* Define light mode gradients */
+    --light-gradient-start: 250 70% 50%;
+    --light-gradient-end: 320 100% 65%;
+
+    /* Define dark mode gradients */
+    --dark-gradient-start: 220 70% 10%;
+    --dark-gradient-end: 220 100% 35%;
+
+    /* Transition these custom properties as well */
+    transition-property: background-color, color,
+      --primary, --secondary, --accent,
+      --gradient-start, --gradient-end, --glow-color;
+    transition-duration: 0.7s;
+    transition-timing-function: ease-in-out;
+  }
+
+  .dark {
+    --primary: 220 70% 10%;
+    --secondary: 240 70% 10%;
+    --accent: 220 100% 35%;
+    --gradient-start: 220 70% 10%;
+    --gradient-end: 220 100% 35%;
+    --glow-color: 220 100% 35%;
+  }
+
+  body {
+    /* The usual fade for text/background */
+    transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
+  }
+
+  /* Attach custom properties to html, which gets the .dark class */
+  html {
+    --gradient-start: 250 70% 50%;
+    --gradient-end: 320 100% 65%;
+    transition: background-color 0.7s ease-in-out,
+       color 0.7s ease-in-out,
+       --gradient-start 0.7s ease-in-out,
+       --gradient-end 0.7s ease-in-out;
+  }
+
+  html.dark {
+    --gradient-start: 220 70% 10%;
+    --gradient-end: 220 100% 35%;
+  }
+
+  .hover-ship {
+    pointer-events: none;
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
   }
 }
 
 @layer utilities {
-  .text-glow {
-    text-shadow: 0 0 10px hsl(var(--accent) / 0.5),
-                 0 0 20px hsl(var(--accent) / 0.3);
-  }
-  
-  .neon-border {
-    box-shadow: 0 0 10px hsl(var(--accent) / 0.5),
-                inset 0 0 5px hsl(var(--accent) / 0.3);
-  }
-  
+  /* Background Grid Definition */
   .bg-grid {
-    background-image: linear-gradient(to right, hsl(var(--primary) / 0.1) 1px, transparent 1px),
-                      linear-gradient(to bottom, hsl(var(--primary) / 0.1) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
-}
 
-.hover-ship {
-  pointer-events: none;
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
+  /* Gradient Animation */
+  @keyframes gradientMovement {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Light Mode Gradient Layer */
+  .gradient-light {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      hsl(var(--light-gradient-start)),
+      hsl(var(--light-gradient-end))
+    );
+    background-size: 200% 200%;
+    animation: gradientMovement 10s ease infinite;
+    z-index: -2;
+    transition: opacity 0.7s ease-in-out;
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  /* Dark Mode Gradient Layer */
+  .gradient-dark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      hsl(var(--dark-gradient-start)),
+      hsl(var(--dark-gradient-end))
+    );
+    background-size: 200% 200%;
+    animation: gradientMovement 10s ease infinite;
+    z-index: -3;
+    transition: opacity 0.7s ease-in-out;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Ensure both gradient layers cover the viewport */
+  .gradient-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -4;
+    pointer-events: none;
+  }
+
+  /* Text Glow */
+  .text-glow {
+    text-shadow: 0 0 10px hsl(var(--glow-color) / 0.5),
+                 0 0 20px hsl(var(--glow-color) / 0.4),
+                 0 0 30px hsl(var(--glow-color) / 0.3);
+  }
+
+  /* Neon Border */
+  .neon-border {
+    box-shadow: 0 0 10px hsl(var(--glow-color) / 0.5),
+                inset 0 0 5px hsl(var(--glow-color) / 0.3);
+  }
+
+  /* Add more utility classes as needed */
 }
