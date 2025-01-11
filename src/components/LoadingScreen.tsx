@@ -49,7 +49,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ isLoading }) => {
               }}
               className="text-white/70 text-lg"
             >
-              Loading...
+              The wait is worth it!
             </motion.p>
           </div>
         </motion.div>

@@ -83,7 +83,7 @@ function App() {
     {
       title: 'Learning Platform',
       description: 'Full-stack learning platform with real-time inventory/resource management',
-      image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80',
+      image: '/src/public/Candric-Learning.jpeg',
       tech: ['React', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind', 'framer-motion'],
       github: 'https://github.com',
       live: 'https://example.com',
@@ -91,14 +91,14 @@ function App() {
     {
       title: 'Wipeout-Inspired VR-Game',
       description: 'Virtual reality racing game with AI opponents. Built with Unity and C#',
-      image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80',
+      image: '/src/public/black-unity_2pyg.600.webp',
       tech: ['Unity', 'C#', 'Oculus', 'SteamVR', 'AI'],
       github: 'https://github.com',
     },
     {
       title: 'My portfolio',
       description: 'My personal portfolio website built with React, Vite and Tailwind CSS. Showcasing my projects and skills.',
-      image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80',
+      image: '/src/public/My-Portfolio.jpeg',
       tech: ['react', 'vite', 'tailwind', 'framer-motion', 'lucide'],
       github: 'https://github.com',
       live: 'https://example.com',
@@ -171,13 +171,13 @@ function App() {
                         onClick={() => handleNavigate('about')}
                         className="py-2 px-4 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))/90] transition-colors text-white font-bold"
                       >
-                        More About Me
+                       About Me
                       </button>
                       <button
                         onClick={() => handleNavigate('contact')}
                         className="py-2 px-4 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))/90] transition-colors text-white font-bold"
                       >
-                        DM Me Here
+                        Contact
                       </button>
                     </div>
                   </div>
@@ -200,7 +200,7 @@ function App() {
                       <div className="w-full md:w-1/3 flex-shrink-0">
                         <div className="relative aspect-square overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm">
                           <motion.img
-                            src="/path-to-your-image.jpg" // Replace with your image path
+                            src="/src/public/CedricJanssens.jpeg" // Replace with your image path
                             alt="Cedric Janssens"
                             className="w-full h-full object-cover"
                             initial={{ opacity: 0, scale: 1.1 }}
@@ -215,9 +215,11 @@ function App() {
                       {/* Text content */}
                       <div className="flex-1">
                         <p className="text-base sm:text-lg text-white/80 mb-6">
+                        <br/>
                           My name is Cedric Janssens but most people call me CJ. 
-                          I'm a full-stack and game developer with a passion for creating interactive experiences. 
-                          I'm currently working as a freelance developer. You can find me on GitHub, Instagram or you can leave me a message here.
+                          <br/> 
+                          <br/> I'm a full-stack and game developer with a passion for creating interactive experiences. 
+                          <br/> <br/> I'm currently working as a freelance developer. You can find me on GitHub, Instagram or you can leave me a message here.
                         </p>
                       </div>
                     </div>
