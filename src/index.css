@@ -64,6 +64,20 @@
     transform: translate(-50%, -50%);
     z-index: 9999;
   }
+
+  .animate-ripple {
+    animation: ripple 1s ease-out forwards;
+  }
+
+  @keyframes ripple {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
 }
 
 @layer utilities {
@@ -151,5 +165,39 @@
                 inset 0 0 5px hsl(var(--glow-color) / 0.3);
   }
 
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-opacity {
+    will-change: opacity;
+  }
+
   /* Add more utility classes as needed */
+
+  .page-transition-enter {
+    opacity: 0;
+    transform: scale(0.98) translateY(20px);
+    filter: blur(10px);
+  }
+
+  .page-transition-enter-active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .page-transition-exit {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+
+  .page-transition-exit-active {
+    opacity: 0;
+    transform: scale(0.98) translateY(-20px);
+    filter: blur(10px);
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }

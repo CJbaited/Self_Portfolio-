@@ -1,87 +1,145 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback, memo } from 'react';
+import throttle from 'lodash/throttle';
 
 interface GridCell {
   x: number;
   y: number;
   filled: boolean;
+  timestamp: number | null;
 }
+
+const GridCell = memo(({ cell, cellSize }: { cell: GridCell; cellSize: number }) => (
+  <div
+    className={`absolute will-change-transform will-change-opacity transition-all duration-300 ${
+      cell.filled ? 'bg-white opacity-20 scale-100' : 'opacity-0 scale-50'
+    }`}
+    style={{
+      transform: `translate3d(${cell.x}px, ${cell.y}px, 0)`,
+      width: `${cellSize}px`,
+      height: `${cellSize}px`,
+      backfaceVisibility: 'hidden'
+    }}
+  />
+));
 
 const DynamicGrid: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const [cells, setCells] = useState<GridCell[]>([]);
-  const cellSize = 20; // Size of each grid cell
+  const [viewportDimensions, setViewportDimensions] = useState({ width: 0, height: 0 });
+  const rafRef = useRef<number>();
+  
+  const cellSize = 20;
+  const dynamicLimit = 3;
+  const maxAliveTime = 1000;
 
+  // Handle dynamic cell updates and cleanup
   useEffect(() => {
-    // Initialize grid cells
-    const initGrid = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const newCells: GridCell[] = [];
+    const updateCells = () => {
+      const now = Date.now();
 
-      for (let x = 0; x < width; x += cellSize) {
-        for (let y = 0; y < height; y += cellSize) {
-          newCells.push({
-            x,
-            y,
-            filled: false
+      setCells(prevCells => {
+        const newCells = [...prevCells];
+        let hasChanges = false;
+
+        // Random cell updates
+        if (now % 500 < 16) {
+          const randomIndices = new Set<number>();
+          while (randomIndices.size < dynamicLimit) {
+            randomIndices.add(Math.floor(Math.random() * newCells.length));
+          }
+
+          randomIndices.forEach(index => {
+            newCells[index] = {
+              ...newCells[index],
+              filled: !newCells[index].filled,
+              timestamp: now
+            };
+            hasChanges = true;
           });
         }
-      }
-      setCells(newCells);
+
+        // Cleanup cells
+        newCells.forEach((cell, index) => {
+          if (cell.filled && cell.timestamp && now - cell.timestamp > maxAliveTime) {
+            newCells[index] = {
+              ...cell,
+              filled: false,
+              timestamp: null
+            };
+            hasChanges = true;
+          }
+        });
+
+        return hasChanges ? newCells : prevCells;
+      });
+
+      rafRef.current = requestAnimationFrame(updateCells);
     };
 
-    initGrid();
-    window.addEventListener('resize', initGrid);
-    return () => window.removeEventListener('resize', initGrid);
+    rafRef.current = requestAnimationFrame(updateCells);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
+
+  // Handle viewport updates
+  const updateViewport = useCallback(() => {
+    if (gridRef.current) {
+      const rect = gridRef.current.getBoundingClientRect();
+      setViewportDimensions({
+        width: rect.width,
+        height: rect.height
+      });
+    }
+  }, []);
+
+  const debouncedResize = useCallback(
+    throttle(updateViewport, 250),
+    []
+  );
+
+  // Initialize grid
+  const initGrid = useCallback(() => {
+    const { width, height } = viewportDimensions;
+    const columns = Math.ceil(width / cellSize);
+    const rows = Math.ceil(height / cellSize);
+    const totalCells = columns * rows;
+    
+    setCells(Array.from({ length: totalCells }, (_, index) => ({
+      x: (index % columns) * cellSize,
+      y: Math.floor(index / columns) * cellSize,
+      filled: false,
+      timestamp: null
+    })));
+  }, [viewportDimensions]);
+
+  // Setup and cleanup
+  useEffect(() => {
+    updateViewport();
+    window.addEventListener('resize', debouncedResize);
+    return () => {
+      window.removeEventListener('resize', debouncedResize);
+      debouncedResize.cancel();
+    };
+  }, [debouncedResize]);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-      const radius = 100; // Affect radius around mouse
-
-      setCells(prevCells => 
-        prevCells.map(cell => {
-          const distance = Math.sqrt(
-            Math.pow(cell.x - mouseX, 2) + 
-            Math.pow(cell.y - mouseY, 2)
-          );
-
-          if (distance < radius) {
-            // Random chance to fill/deplete based on distance
-            return {
-              ...cell,
-              filled: Math.random() > distance / radius
-            };
-          }
-          return cell;
-        })
-      );
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    if (viewportDimensions.width && viewportDimensions.height) {
+      initGrid();
+    }
+  }, [viewportDimensions, initGrid]);
 
   return (
-    <div ref={gridRef} className="fixed inset-0 pointer-events-none">
+    <div 
+      ref={gridRef} 
+      className="fixed inset-0"
+      style={{ perspective: '1000px', willChange: 'transform' }}
+    >
       {cells.map((cell, index) => (
-        <div
-          key={index}
-          className={`absolute transition-opacity duration-300 ${
-            cell.filled ? 'bg-white opacity-20' : 'opacity-0'
-          }`}
-          style={{
-            left: `${cell.x}px`,
-            top: `${cell.y}px`,
-            width: `${cellSize}px`,
-            height: `${cellSize}px`
-          }}
-        />
+        <GridCell key={index} cell={cell} cellSize={cellSize} />
       ))}
     </div>
   );
 };
 
-export default DynamicGrid;
+export default memo(DynamicGrid);
