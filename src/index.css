@@ -10,21 +10,12 @@
     --gradient-start: 250 70% 50%;
     --gradient-end: 320 100% 65%;
     --glow-color: 320 100% 65%;
+    --bg-color: 0 0% 100%;
+    --text-color: 0 0% 0%;
 
-    /* Define light mode gradients */
-    --light-gradient-start: 250 70% 50%;
-    --light-gradient-end: 320 100% 65%;
-
-    /* Define dark mode gradients */
-    --dark-gradient-start: 220 70% 10%;
-    --dark-gradient-end: 220 100% 35%;
-
-    /* Transition these custom properties as well */
-    transition-property: background-color, color,
-      --primary, --secondary, --accent,
-      --gradient-start, --gradient-end, --glow-color;
-    transition-duration: 0.7s;
-    transition-timing-function: ease-in-out;
+    /* Light mode colors */
+    --bg-primary: 0 0% 100%;
+    transition: all 0.7s ease-in-out;
   }
 
   .dark {
@@ -34,6 +25,11 @@
     --gradient-start: 220 70% 10%;
     --gradient-end: 220 100% 35%;
     --glow-color: 220 100% 35%;
+    --bg-color: 0 0% 0%;
+    --text-color: 0 0% 100%;
+
+    /* Dark mode colors */
+    --bg-primary: 0 0% 0%;
   }
 
   body {
@@ -65,18 +61,19 @@
     z-index: 9999;
   }
 
-  .animate-ripple {
-    animation: ripple 1s ease-out forwards;
+
+  /* Add smooth transitions */
+  body, .gradient-light, .gradient-dark {
+    transition: all 0.7s ease-in-out;
   }
 
-  @keyframes ripple {
-    from {
-      transform: scale(0);
-    }
-    to {
-      transform: scale(4);
-      opacity: 0;
-    }
+
+  .dark .gradient-light {
+    --light-opacity: 0;
+  }
+
+  .dark .gradient-dark {
+    --dark-opacity: 1;
   }
 }
 
@@ -152,6 +149,19 @@
     pointer-events: none;
   }
 
+  .gradient-container {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      120deg,
+      hsl(var(--gradient-start)),
+      hsl(var(--gradient-end))
+    );
+    transition: all 0.7s ease-in-out;
+    opacity: 1;
+  }
+
   /* Text Glow */
   .text-glow {
     text-shadow: 0 0 10px hsl(var(--glow-color) / 0.5),
@@ -199,5 +209,24 @@
     transform: scale(0.98) translateY(-20px);
     filter: blur(10px);
     transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Custom scrollbar for projects container */
+  .overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--accent) / 0.3) transparent;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--accent) / 0.3);
+    border-radius: 3px;
   }
 }

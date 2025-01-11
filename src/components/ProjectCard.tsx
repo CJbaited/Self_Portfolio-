@@ -21,31 +21,31 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   return (
     <motion.div
-      className="relative group bg-white/5 rounded-lg overflow-hidden"
+      className="relative group bg-white/5 rounded-lg overflow-hidden flex flex-col h-full"
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
-      <div className="aspect-video overflow-hidden">
+      <div className="aspect-video w-full overflow-hidden">
         <img
           src={image}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
       </div>
-      <div className="p-6 border border-white/10 border-t-0">
-        <h3 className="text-xl font-bold mb-2 text-glow">{title}</h3>
-        <p className="text-white/70 mb-4">{description}</p>
-        <div className="flex flex-wrap gap-2 mb-4">
+      <div className="p-4 flex flex-col flex-grow border border-white/10 border-t-0">
+        <h3 className="text-lg font-bold mb-2 text-glow">{title}</h3>
+        <p className="text-white/70 mb-4 text-sm line-clamp-2">{description}</p>
+        <div className="flex flex-wrap gap-1.5 mb-4">
           {tech.map((item) => (
             <span
               key={item}
-              className="px-2 py-1 text-sm rounded bg-white/5 text-white/70"
+              className="px-2 py-0.5 text-xs rounded bg-white/5 text-white/70"
             >
               {item}
             </span>
           ))}
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-3 mt-auto pt-2">
           {github && (
             <a
               href={github}
@@ -53,7 +53,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               rel="noopener noreferrer"
               className="text-white/70 hover:text-white transition-colors"
             >
-              <Github className="w-5 h-5" />
+              <Github className="w-4 h-4" />
             </a>
           )}
           {live && (
@@ -63,7 +63,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               rel="noopener noreferrer"
               className="text-white/70 hover:text-white transition-colors"
             >
-              <ExternalLink className="w-5 h-5" />
+              <ExternalLink className="w-4 h-4" />
             </a>
           )}
         </div>

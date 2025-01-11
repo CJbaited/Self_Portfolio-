@@ -5,9 +5,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: 'hsl(var(--primary))',
-        secondary: 'hsl(var(--secondary))',
-        accent: 'hsl(var(--accent))',
+        accent: 'hsl(var(--accent))'
       },
     },
   },

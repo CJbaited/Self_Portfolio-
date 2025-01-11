@@ -1,10 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 const HoverShip: React.FC = () => {
   const shipRef = useRef<HTMLDivElement>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
+    // Check if device is touch-enabled
+    setIsTouchDevice(('ontouchstart' in window) || 
+      (navigator.maxTouchPoints > 0) || 
+      ((navigator as any).msMaxTouchPoints > 0));
+
+    if (isTouchDevice) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!shipRef.current) return;
 
@@ -18,7 +26,9 @@ const HoverShip: React.FC = () => {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [isTouchDevice]);
+
+  if (isTouchDevice) return null;
 
   return (
     <div ref={shipRef} className="hover-ship">

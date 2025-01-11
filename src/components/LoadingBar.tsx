@@ -3,24 +3,23 @@ import { motion } from 'framer-motion';
 
 interface LoadingBarProps {
   isLoading: boolean;
-  onLoadingComplete: () => void;
+  onLoadingComplete?: () => void;
 }
 
-const LoadingBar: React.FC<LoadingBarProps> = ({ isLoading, onLoadingComplete }) => {
+const LoadingBar: React.FC<LoadingBarProps> = ({ isLoading }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (isLoading) {
       setProgress(0);
-      const duration = 1000; // 1 second loading time
-      const increment = 100 / (duration / 16); // 60fps
+      const duration = 600; // Faster loading time
+      const increment = 100 / (duration / 16);
       
       const timer = setInterval(() => {
         setProgress(prev => {
           const next = prev + increment;
           if (next >= 100) {
             clearInterval(timer);
-            onLoadingComplete();
             return 100;
           }
           return next;
@@ -29,7 +28,7 @@ const LoadingBar: React.FC<LoadingBarProps> = ({ isLoading, onLoadingComplete })
 
       return () => clearInterval(timer);
     }
-  }, [isLoading, onLoadingComplete]);
+  }, [isLoading]);
 
   return (
     <motion.div 

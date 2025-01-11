@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, Linkedin, Twitter, Code, Database, Server } from 'lucide-react';
+import { Github, Instagram, Code, Database, Server } from 'lucide-react';
 import Navigation from './components/Navigation';
 import ProjectCard from './components/ProjectCard';
 import HoverShip from './components/HoverShip';
 import DynamicGrid from './components/DynamicGrid';
+import LoadingScreen from './components/LoadingScreen';
 
 const sectionVariants = {
   enter: { 
@@ -37,13 +38,32 @@ function App() {
   const [currentSection, setCurrentSection] = useState('home');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-  }, [isDarkMode]);
+    // Initialize dark mode from localStorage or system preference
+    const isDark = localStorage.getItem('darkMode') === 'true' || 
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setIsDarkMode(isDark);
+    document.documentElement.classList.toggle('dark', isDark);
+  }, []);
+
+  useEffect(() => {
+    // Simulate resource loading
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 2000); // Adjust time as needed
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+    setIsDarkMode(prev => {
+      const newValue = !prev;
+      document.documentElement.classList.toggle('dark', newValue);
+      localStorage.setItem('darkMode', String(newValue));
+      return newValue;
+    });
   };
 
   const handleNavigate = (section: string) => {
@@ -64,7 +84,7 @@ function App() {
       title: 'Learning Platform',
       description: 'Full-stack learning platform with real-time inventory/resource management',
       image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80',
-      tech: ['React', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind'],
+      tech: ['React', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind', 'framer-motion'],
       github: 'https://github.com',
       live: 'https://example.com',
     },
@@ -75,191 +95,232 @@ function App() {
       tech: ['Unity', 'C#', 'Oculus', 'SteamVR', 'AI'],
       github: 'https://github.com',
     },
+    {
+      title: 'My portfolio',
+      description: 'My personal portfolio website built with React, Vite and Tailwind CSS. Showcasing my projects and skills.',
+      image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80',
+      tech: ['react', 'vite', 'tailwind', 'framer-motion', 'lucide'],
+      github: 'https://github.com',
+      live: 'https://example.com',
+    },
   ];
 
   const skills = [
     { icon: Code, label: 'Frontend', items: ['React', 'TypeScript', 'Tailwind'] },
     { icon: Server, label: 'Backend', items: ['Node.js', 'C#', 'Go'] },
-    { icon: Database, label: 'Database', items: ['PostgreSQL', 'Supabase', 'MySQL'] },
+    { icon: Database, label: 'Database', items: ['PostgreSQL', 'Supabase', 'Firebase'] },
   ];
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
-      {/* Gradient Layers */}
-      <div className="gradient-container">
-        <div
-          className={`gradient-light ${
-            isDarkMode ? 'opacity-0' : 'opacity-100'
-          }`}
-        />
-        <div
-          className={`gradient-dark ${
-            isDarkMode ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-      </div>
+      <LoadingScreen isLoading={isInitialLoading} />
+      
+      {/* Rest of your app */}
+      {!isInitialLoading && (
+        <>
+          <div className="gradient-container" />
+          <div className="absolute inset-0 bg-grid opacity-20" />
+          <HoverShip />
+          <DynamicGrid />
+          <Navigation
+            currentSection={currentSection}
+            onNavigate={handleNavigate}
+            isDarkMode={isDarkMode}
+            toggleDarkMode={toggleDarkMode}
+            isNavigating={isNavigating}
+          />
 
-      {/* Overlay Grid */}
-      <div className="absolute inset-0 bg-grid opacity-20" />
-
-      {/* HoverShip Component */}
-      <HoverShip />
-      <DynamicGrid />
-
-      {/* Navigation Component */}
-      <Navigation
-        currentSection={currentSection}
-        onNavigate={handleNavigate}
-        isDarkMode={isDarkMode}
-        toggleDarkMode={toggleDarkMode}
-        isNavigating={isNavigating}
-      />
-
-      {/* Main Content with improved transitions */}
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={currentSection}
-          className="w-full min-h-screen relative z-10"
-          initial="enter"
-          animate="center"
-          exit="exit"
-          variants={sectionVariants}
-          transition={transition}
-        >
-          {/* Wrap each section in motion.div for smooth transitions */}
-          {currentSection === 'home' && (
-            <motion.section
-              className="h-screen flex items-center justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
+          {/* Main Content with improved transitions */}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={currentSection}
+              className="w-full min-h-screen relative z-10"
+              initial="enter"
+              animate="center"
+              exit="exit"
+              variants={sectionVariants}
+              transition={transition}
             >
-              <div className="text-center">
-                <motion.h1
-                  className="text-6xl font-bold mb-4 text-glow"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+              {/* Wrapped each section in motion.div for smooth transitions */}
+              {currentSection === 'home' && (
+                <motion.section
+                  className="h-screen flex items-center justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
-                  Cedric Janssens
-                </motion.h1>
-                <motion.p
-                  className="text-2xl text-white/80 mb-8"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  Full-Stack Developer & Game Enthusiast
-                </motion.p>
-              </div>
-            </motion.section>
-          )}
-
-          {currentSection === 'about' && (
-            <motion.section
-              className="h-screen flex items-center justify-center p-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="max-w-4xl">
-                <h2 className="text-4xl font-bold mb-8 text-glow">About Me</h2>
-                <p className="text-lg text-white/80 mb-8">
-                  Passionate about creating seamless digital experiences and drawing inspiration
-                  from the futuristic aesthetics of games like Wipeout. I specialize in building
-                  modern web applications with a focus on performance and user experience.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {skills.map(({ icon: Icon, label, items }) => (
-                    <div key={label} className="p-6 rounded-lg bg-white/5 backdrop-blur-sm">
-                      <Icon className="w-8 h-8 mb-4" />
-                      <h3 className="text-xl font-bold mb-4">{label}</h3>
-                      <ul className="space-y-2">
-                        {items.map((item) => (
-                          <li key={item} className="text-white/70">
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
+                  <div className="text-center">
+                    <motion.h1
+                      className="text-6xl font-bold mb-4 text-glow"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      Cedric's Web
+                    </motion.h1>
+                    <motion.p
+                      className="text-2xl text-white/80 mb-8"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                    >
+                      Full-Stack Developer & Game Enthusiast
+                    </motion.p>
+                    <div className="flex justify-center gap-4">
+                      <button
+                        onClick={() => handleNavigate('about')}
+                        className="py-2 px-4 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))/90] transition-colors text-white font-bold"
+                      >
+                        More About Me
+                      </button>
+                      <button
+                        onClick={() => handleNavigate('contact')}
+                        className="py-2 px-4 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))/90] transition-colors text-white font-bold"
+                      >
+                        DM Me Here
+                      </button>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </motion.section>
-          )}
+                  </div>
+                </motion.section>
+              )}
 
-          {currentSection === 'projects' && (
-            <motion.section
-              className="h-screen flex items-center justify-center p-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="max-w-6xl">
-                <h2 className="text-4xl font-bold mb-8 text-glow">Projects</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {projects.map((project) => (
-                    <ProjectCard key={project.title} {...project} />
-                  ))}
-                </div>
-              </div>
-            </motion.section>
-          )}
+              {currentSection === 'about' && (
+                <motion.section
+                  className="min-h-screen flex items-center justify-center p-4 sm:p-8 overflow-y-auto"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <div className="max-w-4xl w-full my-20 sm:my-0">
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8 text-glow">About Me</h2>
+                    
+                    {/* Add image and text container */}
+                    <div className="flex flex-col md:flex-row gap-8 mb-8">
+                      {/* Image container */}
+                      <div className="w-full md:w-1/3 flex-shrink-0">
+                        <div className="relative aspect-square overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm">
+                          <motion.img
+                            src="/path-to-your-image.jpg" // Replace with your image path
+                            alt="Cedric Janssens"
+                            className="w-full h-full object-cover"
+                            initial={{ opacity: 0, scale: 1.1 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5 }}
+                          />
+                          {/* Optional gradient overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                        </div>
+                      </div>
 
-          {currentSection === 'contact' && (
-            <motion.section
-              className="h-screen flex items-center justify-center p-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="max-w-md w-full">
-                <h2 className="text-4xl font-bold mb-8 text-glow">Contact</h2>
-                <form className="space-y-6">
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Name"
-                      className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
-                    />
+                      {/* Text content */}
+                      <div className="flex-1">
+                        <p className="text-base sm:text-lg text-white/80 mb-6">
+                          My name is Cedric Janssens but most people call me CJ. 
+                          I'm a full-stack and game developer with a passion for creating interactive experiences. 
+                          I'm currently working as a freelance developer. You can find me on GitHub, Instagram or you can leave me a message here.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Skills grid */}
+                    <div className="grid grid-cols-1 gap-4 sm:gap-8">
+                      {skills.map(({ icon: Icon, label, items }) => (
+                        <div 
+                          key={label} 
+                          className="p-4 sm:p-6 rounded-lg bg-white/5 backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center gap-4"
+                        >
+                          <div className="flex items-center gap-4 w-full sm:w-1/3">
+                            <Icon className="w-6 h-6 sm:w-8 sm:h-8" />
+                            <h3 className="text-lg sm:text-xl font-bold">{label}</h3>
+                          </div>
+                          <ul className="flex flex-wrap gap-2 w-full sm:w-2/3">
+                            {items.map((item) => (
+                              <li 
+                                key={item} 
+                                className="px-3 py-1 rounded-full bg-white/10 text-white/70 text-sm"
+                              >
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div>
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
-                    />
+                </motion.section>
+              )}
+
+              {currentSection === 'projects' && (
+                <motion.section
+                  className="min-h-screen flex items-center justify-center p-8 overflow-hidden"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <div className="max-w-7xl w-full">
+                    <h2 className="text-4xl font-bold mb-8 text-glow">Projects</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min overflow-y-auto max-h-[70vh] px-2">
+                      {projects.map((project) => (
+                        <ProjectCard key={project.title} {...project} />
+                      ))}
+                    </div>
                   </div>
-                  <div>
-                    <textarea
-                      placeholder="Message"
-                      rows={4}
-                      className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
-                    />
+                </motion.section>
+              )}
+
+              {currentSection === 'contact' && (
+                <motion.section
+                  className="h-screen flex items-center justify-center p-8"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <div className="max-w-md w-full">
+                    <h2 className="text-4xl font-bold mb-8 text-glow">Contact</h2>
+                    <form className="space-y-6">
+                      <div>
+                        <input
+                          type="text"
+                          placeholder="Name"
+                          className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <input
+                          type="email"
+                          placeholder="Email"
+                          className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <textarea
+                          placeholder="Message"
+                          rows={4}
+                          className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="w-full py-3 px-6 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))/90] transition-colors text-white font-bold"
+                      >
+                        Send Message
+                      </button>
+                    </form>
+                    <div className="flex justify-center gap-6 mt-8">
+                      <a href="https://github.com/CJbaited" className="text-white/70 hover:text-white transition-colors">
+                        <Github className="w-6 h-6" />
+                      </a>
+                      <a href="https://www.instagram.com/cedricjwoods/?__pwa=1" className="text-white/70 hover:text-white transition-colors">
+                        <Instagram className="w-6 h-6" />
+                      </a>
+                    </div>
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full py-3 px-6 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))/90] transition-colors text-white font-bold"
-                  >
-                    Send Message
-                  </button>
-                </form>
-                <div className="flex justify-center gap-6 mt-8">
-                  <a href="https://github.com" className="text-white/70 hover:text-white transition-colors">
-                    <Github className="w-6 h-6" />
-                  </a>
-                  <a href="https://linkedin.com" className="text-white/70 hover:text-white transition-colors">
-                    <Linkedin className="w-6 h-6" />
-                  </a>
-                  <a href="https://twitter.com" className="text-white/70 hover:text-white transition-colors">
-                    <Twitter className="w-6 h-6" />
-                  </a>
-                </div>
-              </div>
-            </motion.section>
-          )}
-        </motion.div>
-      </AnimatePresence>
+                </motion.section>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </>
+      )}
     </div>
   );
 }
