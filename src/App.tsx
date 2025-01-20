@@ -110,7 +110,6 @@ function App() {
         {
           from_name: formData.name,
           message: formattedMessage,
-          // Remove from_email as it's now included in the message
         },
         'UGSYfmYRfNTsnFpr2'
       );
@@ -161,7 +160,7 @@ function App() {
     <div className="min-h-screen text-white relative overflow-hidden">
       <LoadingScreen isLoading={isInitialLoading} />
       
-      {/* Rest of your app */}
+      {/* Main content */}
       {!isInitialLoading && (
         <>
           <div className="gradient-container" />
@@ -240,20 +239,20 @@ function App() {
                   <div className="max-w-4xl w-full my-20 sm:my-0">
                     <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8 text-glow">About Me</h2>
                     
-                    {/* Add image and text container */}
+                    {/* text container */}
                     <div className="flex flex-col md:flex-row gap-8 mb-8">
                       {/* Image container */}
                       <div className="w-full md:w-1/3 flex-shrink-0">
                         <div className="relative aspect-square overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm">
                           <motion.img
-                            src="/CedricJanssens.jpeg" // Replace with your image path
+                            src="/CedricJanssens.JPEG" 
                             alt="Cedric Janssens"
                             className="w-full h-full object-cover"
                             initial={{ opacity: 0, scale: 1.1 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5 }}
                           />
-                          {/* Optional gradient overlay */}
+                          {/* gradient overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                         </div>
                       </div>
