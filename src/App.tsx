@@ -130,25 +130,24 @@ function App() {
     {
       title: 'Learning Platform',
       description: 'Full-stack learning platform with real-time inventory/resource management',
-      image: '/src/public/Candric-Learning.jpeg',
+      image: '/Candric-Learning.jpeg',
       tech: ['React', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind', 'framer-motion'],
-      github: 'https://github.com',
-      live: 'https://example.com',
+      github: 'https://github.com/CJbaited/Candice',
     },
     {
       title: 'Wipeout-Inspired VR-Game',
       description: 'Virtual reality racing game with AI opponents. Built with Unity and C#',
-      image: '/src/public/black-unity_2pyg.600.webp',
+      image: '/black-unity_2pyg.600.webp',
       tech: ['Unity', 'C#', 'Oculus', 'SteamVR', 'AI'],
-      github: 'https://github.com',
+      github: 'Provided upon request',
     },
     {
       title: 'My portfolio',
       description: 'My personal portfolio website built with React, Vite and Tailwind CSS. Showcasing my projects and skills.',
-      image: '/src/public/My-Portfolio.jpeg',
+      image: '/My-Portfolio.jpeg',
       tech: ['react', 'vite', 'tailwind', 'framer-motion', 'lucide'],
-      github: 'https://github.com',
-      live: 'https://example.com',
+      github: 'https://github.com/CJbaited/Self_Portfolio-',
+      live: 'https://cedricsweb.site',
     },
   ];
 
@@ -247,7 +246,7 @@ function App() {
                       <div className="w-full md:w-1/3 flex-shrink-0">
                         <div className="relative aspect-square overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm">
                           <motion.img
-                            src="/src/public/CedricJanssens.jpeg" // Replace with your image path
+                            src="/CedricJanssens.jpeg" // Replace with your image path
                             alt="Cedric Janssens"
                             className="w-full h-full object-cover"
                             initial={{ opacity: 0, scale: 1.1 }}
