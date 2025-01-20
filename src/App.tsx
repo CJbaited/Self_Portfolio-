@@ -6,6 +6,7 @@ import ProjectCard from './components/ProjectCard';
 import HoverShip from './components/HoverShip';
 import DynamicGrid from './components/DynamicGrid';
 import LoadingScreen from './components/LoadingScreen';
+import emailjs from '@emailjs/browser';
 
 const sectionVariants = {
   enter: { 
@@ -39,6 +40,16 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [formStatus, setFormStatus] = useState({
+    isSubmitting: false,
+    isSubmitted: false,
+    error: null as string | null
+  });
 
   useEffect(() => {
     // Initialize dark mode from localStorage or system preference
@@ -79,6 +90,42 @@ function App() {
     }, 300);
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormStatus({ isSubmitting: true, isSubmitted: false, error: null });
+  
+    // Format message to include sender's email
+    const formattedMessage = `
+  From: ${formData.email}
+  Name: ${formData.name}
+  
+  Message:
+  ${formData.message}
+  `;
+  
+    try {
+      await emailjs.send(
+        'service_1x44vv5',
+        'template_w948rja',
+        {
+          from_name: formData.name,
+          message: formattedMessage,
+          // Remove from_email as it's now included in the message
+        },
+        'UGSYfmYRfNTsnFpr2'
+      );
+  
+      setFormStatus({ isSubmitting: false, isSubmitted: true, error: null });
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      setFormStatus({ 
+        isSubmitting: false, 
+        isSubmitted: false, 
+        error: 'Failed to send message. Please try again.'
+      });
+    }
+  };
+
   const projects = [
     {
       title: 'Learning Platform',
@@ -106,8 +153,8 @@ function App() {
   ];
 
   const skills = [
-    { icon: Code, label: 'Frontend', items: ['React', 'TypeScript', 'Tailwind'] },
-    { icon: Server, label: 'Backend', items: ['Node.js', 'C#', 'Go'] },
+    { icon: Code, label: 'Frontend', items: ['React','React-Native','TypeScript', 'Tailwind', 'JavaScript', 'Lucide', 'Expo Go'] },
+    { icon: Server, label: 'Backend', items: ['Node.js', 'C#', '.NET', 'Go', 'Render', 'Fly.io'] },
     { icon: Database, label: 'Database', items: ['PostgreSQL', 'Supabase', 'Firebase'] },
   ];
 
@@ -279,35 +326,67 @@ function App() {
                 >
                   <div className="max-w-md w-full">
                     <h2 className="text-4xl font-bold mb-8 text-glow">Contact</h2>
-                    <form className="space-y-6">
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="Name"
-                          className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="email"
-                          placeholder="Email"
-                          className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
-                        />
-                      </div>
-                      <div>
-                        <textarea
-                          placeholder="Message"
-                          rows={4}
-                          className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="w-full py-3 px-6 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))/90] transition-colors text-white font-bold"
+                    {formStatus.isSubmitted ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-center p-8 rounded-lg bg-white/5 backdrop-blur-sm"
                       >
-                        Send Message
-                      </button>
-                    </form>
+                        <h3 className="text-xl font-bold mb-4 text-[hsl(var(--accent))]">Message Sent!</h3>
+                        <p className="text-white/80 mb-6">Thank you for reaching out. I'll get back to you soon.</p>
+                        <button
+                          onClick={() => setFormStatus({ isSubmitting: false, isSubmitted: false, error: null })}
+                          className="py-2 px-4 rounded-lg bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))/90] transition-colors"
+                        >
+                          Send Another Message
+                        </button>
+                      </motion.div>
+                    ) : (
+                      <form className="space-y-6" onSubmit={handleSubmit}>
+                        <div>
+                          <input
+                            type="text"
+                            placeholder="Name"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <input
+                            type="email"
+                            placeholder="Email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <textarea
+                            placeholder="Message"
+                            required
+                            rows={4}
+                            value={formData.message}
+                            onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+                            className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:border-[hsl(var(--accent))] transition-colors"
+                          />
+                        </div>
+                        {formStatus.error && (
+                          <div className="text-red-500 text-sm">{formStatus.error}</div>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={formStatus.isSubmitting}
+                          className={`w-full py-3 px-6 rounded-lg bg-[hsl(var(--accent))] 
+                            hover:bg-[hsl(var(--accent))/90] transition-colors text-white font-bold
+                            ${formStatus.isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          {formStatus.isSubmitting ? 'Sending...' : 'Send Message'}
+                        </button>
+                      </form>
+                    )}
                     <div className="flex justify-center gap-6 mt-8">
                       <a href="https://github.com/CJbaited" className="text-white/70 hover:text-white transition-colors">
                         <Github className="w-6 h-6" />
