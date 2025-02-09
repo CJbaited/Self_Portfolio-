@@ -209,7 +209,7 @@ function App() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
                     >
-                      Full-Stack Developer & Game Enthusiast
+                      Full-Stack & Mobile Developer
                     </motion.p>
                     <div className="flex justify-center gap-4">
                       <button
