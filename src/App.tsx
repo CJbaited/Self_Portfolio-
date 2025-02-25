@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, Instagram, Code, Database, Server } from 'lucide-react';
+import { Github, Instagram, Code, Database, Server, CakeIcon, CakeSliceIcon, Linkedin } from 'lucide-react';
 import Navigation from './components/Navigation';
 import ProjectCard from './components/ProjectCard';
 import HoverShip from './components/HoverShip';
@@ -127,11 +127,33 @@ function App() {
 
   const projects = [
     {
+      title: 'TutorMatching Web',
+      description: 'Web app to present the app with an integrated admin portal for ticket handling. Built with C# and Supabase.',
+      image: '/tutormatchweb.png',
+      tech: ['C#', '.NET', 'Bootstrap', 'SupaBase', 'Css', 'Html'],
+      github: 'https://github.com/CJbaited/TutormatchWeb',
+    },
+    {
+      title: 'TutorMatching App',
+      description: 'Mobile app for students and tutors to match and schedule lessons. Built with React Native and Supabase.',
+      image: '/tutorapp4devices.jpeg',
+      tech: ['React-Native', 'npm', 'SupaBase', 'NativeWind', 'Lucide'],
+      github: 'https://github.com/CJbaited/TutorMatchApp',
+    },
+    {
       title: 'Learning Platform',
       description: 'Full-stack learning platform with real-time inventory/resource management',
       image: '/Candric-Learning.jpeg',
-      tech: ['React', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind', 'framer-motion'],
+      tech: ['React', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind', 'Framer-motion'],
       github: 'https://github.com/CJbaited/Candice',
+    },
+    {
+      title: 'My portfolio',
+      description: 'My personal portfolio website built with React, Vite and Tailwind CSS. Showcasing my projects and skills.',
+      image: '/My-Portfolio.jpeg',
+      tech: ['React', 'Vite', 'Tailwind', 'Framer-motion', 'Lucide'],
+      github: 'https://github.com/CJbaited/Self_Portfolio-',
+      live: 'https://cedricsweb.site',
     },
     {
       title: 'Wipeout-Inspired VR-Game',
@@ -139,14 +161,6 @@ function App() {
       image: '/black-unity_2pyg.600.webp',
       tech: ['Unity', 'C#', 'Oculus', 'SteamVR', 'AI'],
       github: 'Provided upon request',
-    },
-    {
-      title: 'My portfolio',
-      description: 'My personal portfolio website built with React, Vite and Tailwind CSS. Showcasing my projects and skills.',
-      image: '/My-Portfolio.jpeg',
-      tech: ['react', 'vite', 'tailwind', 'framer-motion', 'lucide'],
-      github: 'https://github.com/CJbaited/Self_Portfolio-',
-      live: 'https://cedricsweb.site',
     },
   ];
 
@@ -263,9 +277,37 @@ function App() {
                         <br/>
                           My name is Cedric Janssens but most people call me CJ. 
                           <br/> 
-                          <br/> I'm a full-stack and game developer with a passion for creating interactive experiences. 
-                          <br/> <br/> I'm currently working as a freelance developer. You can find me on GitHub, Instagram or you can leave me a message here.
+                          <br/> I'm a full-stack web and mobile developer with a passion for creating interactive experiences. 
+                          <br/> <br/> I'm currently working as a freelance developer. I'm always looking for new opportunities to learn and grow.
+                          <br/> <br/> You can find me on GitHub, Instagram or you can leave me a message here.
+                          <br/> I'm looking forward to work with you!
                         </p>
+                        
+                        {/* Resume Button */}
+                        <motion.a
+                          href="/CedricJanssensResume.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 py-2 px-4 rounded-lg bg-[hsl(var(--accent))] 
+                                    hover:bg-[hsl(var(--accent))] hover:opacity-90 transition-all text-white font-medium"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <svg 
+                            className="w-5 h-5" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round" 
+                              strokeWidth={2} 
+                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                            />
+                          </svg>
+                          View Resume
+                        </motion.a>
                       </div>
                     </div>
 
@@ -391,6 +433,12 @@ function App() {
                       </a>
                       <a href="https://www.instagram.com/cedricjwoods/?__pwa=1" className="text-white/70 hover:text-white transition-colors">
                         <Instagram className="w-6 h-6" />
+                      </a>
+                      <a href="www.linkedin.com/in/cédric-janssens-703b06347" className="text-white/70 hover:text-white transition-colors">
+                        <Linkedin className="w-6 h-6" />
+                      </a>
+                      <a href="https://www.cake.me/cedric-janssens" className="text-white/70 hover:text-white transition-colors">
+                        <CakeSliceIcon className="w-6 h-6" />
                       </a>
                     </div>
                   </div>
